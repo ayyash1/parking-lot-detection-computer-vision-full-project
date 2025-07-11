@@ -12,8 +12,21 @@ from utils import get_parking_slot_bboxes, slot_availability, calc_diff
 #paths
 video_path = 'ParkingLotDetection/Data/parking_1920_1080_loop.mp4'
 mask_path = 'ParkingLotDetection/Data/mask_1920_1080.png'
+output_dir = 'ParkingLotDetection/Output'
 
+#read frame
 cap = cv2.VideoCapture(video_path)
+ret, frame = cap.read() 
+
+#save output video
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+ 
+output_video = cv2.VideoWriter(os.path.join(output_dir, 'output.avi'),
+                                    cv2.VideoWriter_fourcc(*'XVID'),
+                                    30,
+                                    (frame.shape[1], frame.shape[0]))
 
 mask = imread(mask_path) 
 
@@ -95,6 +108,8 @@ while True:
     cv2.namedWindow('frame', cv2.WINDOW_NORMAL)
     cv2.imshow('frame', frame)
 
+    #save video
+    output_video.write(frame)
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
         break
